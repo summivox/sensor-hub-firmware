@@ -6,7 +6,7 @@
 
 
 // Output (only latest is kept)
-q15_t adc_val[adc_ch_n] ALIGN32;
+q15_t adc_val[adc_ch_n];
 
 
 // Data organization:
@@ -106,12 +106,10 @@ extern "C" void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
             );
 #else
     // naive average
-    memset(adc_val, 0, sizeof(adc_val));
+    EACH(ch) adc_val[ch] = 0;
     for (int i = adc_decimation_m*2 ; i --> adc_decimation_m ; --i)
-        EACH(ch)
-            adc_val[ch] += adc_raw[i][ch];
-    EACH(ch)
-        adc_val[ch] /= adc_decimation_m;
+        EACH(ch) adc_val[ch] += adc_raw[i][ch];
+    EACH(ch) adc_val[ch] /= adc_decimation_m;
 #endif
 
     DBG0 = 0;

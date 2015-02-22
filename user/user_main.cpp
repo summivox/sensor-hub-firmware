@@ -27,11 +27,28 @@ uint16_t enc_abs_val;
 void enc_abs_init();
 
 
+// data payload
+void chain_load_data() {
+#ifndef CHAIN_DUMMY_DATA
+    chain_buf[0] = enc_abs_val;
+    chain_buf[1] = TIM1->CNT;
+    chain_buf[2] = TIM2->CNT;
+    chain_buf[3] = TIM3->CNT;
+    chain_buf[4] = TIM4->CNT;
+    chain_buf[5] = adc_val[0];
+    chain_buf[6] = adc_val[1];
+    chain_buf[7] = adc_val[2];
+#else
+    static const int dummy[chain_buf_n] = CHAIN_DUMMY_DATA;
+    memcpy(chain_buf, dummy, chain_buf_n);
+#endif
+}
+
+
 void user_main() {
     retarget_init();
     os_sys_init_prio(main_task, 0x80);
 }
-
 __task void main_task() {
     puts("\r\n\r\n=== RNL2 sensor hub ===\r\n\r\n");
 
@@ -73,21 +90,6 @@ void enc_abs_start() {
     HAL_SPI_Receive_DMA(&hspi2, (uint8_t*)&enc_abs_val, 1);
 }
 
-void chain_load_data() {
-#ifndef CHAIN_DUMMY_DATA
-    chain_buf[0] = enc_abs_val;
-    chain_buf[1] = TIM1->CNT;
-    chain_buf[2] = TIM2->CNT;
-    chain_buf[3] = TIM3->CNT;
-    chain_buf[4] = TIM4->CNT;
-    chain_buf[5] = adc_val[0];
-    chain_buf[6] = adc_val[1];
-    chain_buf[7] = adc_val[2];
-#else
-    static const int dummy[chain_buf_n] = CHAIN_DUMMY_DATA;
-    memcpy(chain_buf, dummy, chain_buf_n);
-#endif
-}
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
     //DBG0 = 1;

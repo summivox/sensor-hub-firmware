@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * File Name          : ADC.c
-  * Date               : 21/02/2015 21:47:08
+  * Date               : 22/02/2015 17:06:36
   * Description        : This file provides code for the configuration
   *                      of the ADC instances.
   ******************************************************************************
@@ -59,7 +59,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 4;
+  hadc1.Init.NbrOfConversion = 3;
   HAL_ADC_Init(&hadc1);
 
     /**Configure Regular Channel 
@@ -71,20 +71,14 @@ void MX_ADC1_Init(void)
 
     /**Configure Regular Channel 
     */
-  sConfig.Channel = ADC_CHANNEL_10;
-  sConfig.Rank = 1;
-  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-
-    /**Configure Regular Channel 
-    */
   sConfig.Channel = ADC_CHANNEL_12;
   sConfig.Rank = 3;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
     /**Configure Regular Channel 
     */
-  sConfig.Channel = ADC_CHANNEL_13;
-  sConfig.Rank = 4;
+  sConfig.Channel = ADC_CHANNEL_10;
+  sConfig.Rank = 1;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
