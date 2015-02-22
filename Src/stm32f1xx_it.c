@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    stm32f1xx_it.c
-  * @date    21/02/2015 19:33:50
+  * @date    22/02/2015 08:36:23
   * @brief   Interrupt Service Routines.
   ******************************************************************************
   *
@@ -40,12 +40,27 @@
 /* USER CODE END 0 */
 /* External variables --------------------------------------------------------*/
 
+extern DMA_HandleTypeDef hdma_adc1;
 extern DMA_HandleTypeDef hdma_usart2_tx;
 extern DMA_HandleTypeDef hdma_usart2_rx;
 
 /******************************************************************************/
 /*            Cortex-M3 Processor Interruption and Exception Handlers         */ 
 /******************************************************************************/
+
+/**
+* @brief This function handles DMA1 channel1 global interrupt.
+*/
+void DMA1_Channel1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_adc1);
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
 
 
 /**

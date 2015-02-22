@@ -335,7 +335,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>3</Optim>
+            <Optim>1</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -566,6 +566,16 @@
               <FileName>chain.hpp</FileName>
               <FileType>5</FileType>
               <FilePath>..\user\chain.hpp</FilePath>
+            </File>
+            <File>
+              <FileName>analog.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\user\analog.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>analog.hpp</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\user\analog.hpp</FilePath>
             </File>
           </Files>
         </Group>

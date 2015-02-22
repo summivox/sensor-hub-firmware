@@ -12,6 +12,7 @@
 #include "conf.hpp"
 #include "misc.hpp"
 #include "chain.hpp"
+#include "analog.hpp"
 
 extern "C" void user_main(void);
 extern "C" void retarget_init(void);
@@ -32,7 +33,7 @@ void user_main() {
 
 void chain_load_data();
 void HAL_GPIO_EXTI_Callback(uint16_t pin) {
-    DBG0 = 1;
+    //DBG0 = 1;
     if (pin == GPIO_PIN_4) {
         if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4) == 0) {
             chain_load_data();
@@ -41,7 +42,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t pin) {
             chain_stop();
         }
     }
-    DBG0 = 0;
+    //DBG0 = 0;
 }
 
 __task void main_task() {
@@ -49,10 +50,12 @@ __task void main_task() {
 
     encoder_init();
     spi2_init();
+    adc_init();
     chain_init();
 
     DBG1 = 1;
     os_dly_wait(1000);
+    adc_start();
 
     os_itv_set(1);
     while (1) {
