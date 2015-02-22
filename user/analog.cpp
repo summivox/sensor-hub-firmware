@@ -5,8 +5,6 @@
 #include "misc.hpp"
 
 
-
-
 // Output (only latest is kept)
 q15_t adc_val[adc_ch_n] ALIGN32;
 
@@ -20,13 +18,14 @@ q15_t adc_val[adc_ch_n] ALIGN32;
 //  Or, just average each group (for speed)
 
 static q15_t adc_raw[adc_decimation_m*2][adc_ch_n] ALIGN32;
-static q15_t adc_raw_tr[adc_ch_n][adc_decimation_m] ALIGN32;
 
+#if ADC_FILTER_ENABLE
+static q15_t adc_raw_tr[adc_ch_n][adc_decimation_m] ALIGN32;
 static arm_matrix_instance_q15
     adc_mat_1 = {adc_decimation_m, adc_ch_n, adc_raw[0]},
     adc_mat_2 = {adc_decimation_m, adc_ch_n, adc_raw[adc_decimation_m]},
     adc_mat_tr = {adc_ch_n, adc_decimation_m, adc_raw_tr[0]};
-
+#endif//ADC_FILTER_ENABLE
 
 // Decimation (downsampling) filter:
 //  const size_t filt_n;
@@ -34,14 +33,19 @@ static arm_matrix_instance_q15
 // 
 // block size == decimation factor (1 block => 1 sample)
 
+#if ADC_FILTER_ENABLE
 #include "filter.h"
 static q15_t filt_state[adc_ch_n][filt_n + adc_decimation_m - 1] ALIGN32;
 static arm_fir_decimate_instance_q15 filt[adc_ch_n];
+#endif//ADC_FILTER_ENABLE
 
+    
 #define EACH(ch) for (int ch = adc_ch_n ; ch --> 0 ; )
 
+    
 void adc_init() {
     HAL_ADCEx_Calibration_Start(&hadc1);
+#if ADC_FILTER_ENABLE
     EACH(ch)
         arm_fir_decimate_init_q15
             ( &filt[ch]
@@ -51,6 +55,7 @@ void adc_init() {
             , filt_state[ch]
             , adc_decimation_m
             );
+#endif//ADC_FILTER_ENABLE
     DBG0 = 1;
 }
 
