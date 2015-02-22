@@ -55,18 +55,18 @@ __task void main_task() {
     enc_inc_init();
     enc_abs_init();
     adc_init();
+    adc_start();
 
     DBG1 = 1;
     os_dly_wait(1000);
 
     chain_init();
-    adc_start();
 
     os_itv_set(1);
     while (1) {
         DBG1 = 0;
         HAL_SPI_Receive_DMA(&hspi2, (uint8_t*)&enc_abs_val, 1);
-        SHORT_DELAY(2000);
+        SHORT_DELAY(1000);
         HAL_SPI_DMAStop(&hspi2);
         SHORT_DELAY(50);
         DBG1 = 1;

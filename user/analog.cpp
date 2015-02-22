@@ -64,13 +64,8 @@ void adc_start() {
     DBG0 = 0;
 }
 
-extern "C" void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc) {
-    // first half of the double buffer is ready
-    DBG0 = 1;
-
+static void average(int i, int end) {
 #if ADC_FILTER_ENABLE
-    // actual decimation filter (slow)
-    arm_mat_trans_q15(&adc_mat_1, &adc_mat_tr);
     EACH(ch)
         arm_fir_decimate_fast_q15
             ( &filt[ch]
@@ -79,14 +74,23 @@ extern "C" void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc) {
             , adc_decimation_m
             );
 #else
-    // naive average
-    memset(adc_val, 0, sizeof(adc_val));
-    for (int i = adc_decimation_m ; i --> 0 ; --i)
-        EACH(ch)
-            adc_val[ch] += adc_raw[i][ch];
-    EACH(ch)
-        adc_val[ch] /= adc_decimation_m;
+    uint32_t s[adc_ch_n];
+    EACH(ch) s[ch] = 0;
+    for ( ; i != end ; ++i)
+        EACH(ch) s[ch] += adc_raw[i][ch];
+    EACH(ch) adc_val[ch] = (q15_t)(s[ch]/adc_decimation_m);
 #endif
+}
+
+extern "C" void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc) {
+    // first half of the double buffer is ready
+    DBG0 = 1;
+
+#if ADC_FILTER_ENABLE
+    arm_mat_trans_q15(&adc_mat_1, &adc_mat_tr);
+#endif
+
+    average(0, adc_decimation_m);
 
     DBG0 = 0;
 }
@@ -95,22 +99,10 @@ extern "C" void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
     DBG0 = 1;
 
 #if ADC_FILTER_ENABLE
-    // actual decimation filter (slow)
     arm_mat_trans_q15(&adc_mat_2, &adc_mat_tr);
-    EACH(ch)
-        arm_fir_decimate_fast_q15
-            ( &filt[ch]
-            , adc_raw_tr[ch] //src
-            , &adc_val[ch] //dest
-            , adc_decimation_m
-            );
-#else
-    // naive average
-    EACH(ch) adc_val[ch] = 0;
-    for (int i = adc_decimation_m*2 ; i --> adc_decimation_m ; --i)
-        EACH(ch) adc_val[ch] += adc_raw[i][ch];
-    EACH(ch) adc_val[ch] /= adc_decimation_m;
 #endif
+
+    average(adc_decimation_m, adc_decimation_m*2);
 
     DBG0 = 0;
 }

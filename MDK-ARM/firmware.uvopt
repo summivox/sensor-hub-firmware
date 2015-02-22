@@ -139,6 +139,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>DLGTARM</Key>
           <Name>(1010=1296,346,1662,893,0)(1007=308,184,485,449,0)(1008=927,726,1293,952,0)(1009=-1,-1,-1,-1,0)(100=524,119,1160,782,0)(110=-1,-1,-1,-1,0)(111=-1,-1,-1,-1,0)(1011=1172,62,1696,413,1)(180=-1,-1,-1,-1,0)(120=1156,754,1567,1149,1)(121=1178,759,1589,1154,0)(122=-1,-1,-1,-1,0)(123=-1,-1,-1,-1,0)(124=-1,-1,-1,-1,0)(125=-1,-1,-1,-1,0)(126=-1,-1,-1,-1,0)(140=-1,-1,-1,-1,0)(240=-1,-1,-1,-1,0)(190=-1,-1,-1,-1,0)(200=-1,-1,-1,-1,0)(170=-1,-1,-1,-1,0)(130=1161,379,1745,1063,0)(131=-1,-1,-1,-1,0)(132=-1,-1,-1,-1,0)(133=220,194,804,878,0)(160=-1,-1,-1,-1,0)(161=1167,733,1605,1137,0)(162=-1,-1,-1,-1,0)(210=1158,418,1475,769,1)(211=1486,416,1803,767,1)(220=-1,-1,-1,-1,0)(221=-1,-1,-1,-1,0)(230=-1,-1,-1,-1,0)(231=-1,-1,-1,-1,0)(232=-1,-1,-1,-1,0)(233=-1,-1,-1,-1,0)(150=1099,503,1692,1127,1)(151=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
@@ -212,7 +216,7 @@
         <aSer4>0</aSer4>
         <StkLoc>0</StkLoc>
         <TrcWin>0</TrcWin>
-        <newCpu>3</newCpu>
+        <newCpu>0</newCpu>
         <uProt>0</uProt>
       </DebugFlag>
       <LintExecutable></LintExecutable>
@@ -554,7 +558,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>146</TopLine>
+      <TopLine>149</TopLine>
       <CurrentLine>163</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Drivers\CMSIS\Device\ST\STM32F1xx\Source\Templates\arm\startup_stm32f100xb.s</PathWithFileName>
@@ -688,10 +692,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>45</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>11</TopLine>
-      <CurrentLine>27</CurrentLine>
+      <TopLine>61</TopLine>
+      <CurrentLine>75</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Src\main.c</PathWithFileName>
       <FilenameWithoutPath>main.c</FilenameWithoutPath>
@@ -728,10 +732,10 @@
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>21</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>40</TopLine>
-      <CurrentLine>68</CurrentLine>
+      <TopLine>13</TopLine>
+      <CurrentLine>33</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\user\user_main.cpp</PathWithFileName>
       <FilenameWithoutPath>user_main.cpp</FilenameWithoutPath>
