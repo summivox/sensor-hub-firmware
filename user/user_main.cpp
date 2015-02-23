@@ -23,7 +23,7 @@ __task void main_task();
 void enc_inc_init();
 
 // SPI2: absolute encoder interface
-uint16_t enc_abs_val;
+volatile uint16_t enc_abs_val;
 void enc_abs_init();
 
 

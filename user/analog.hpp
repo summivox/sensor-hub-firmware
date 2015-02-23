@@ -11,7 +11,7 @@
 
 #include "conf.hpp"
 
-extern q15_t adc_val[adc_ch_n];
+extern volatile q15_t adc_val[adc_ch_n];
 
 void adc_init();
 void adc_start();

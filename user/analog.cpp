@@ -6,7 +6,7 @@
 
 
 // Output (only latest is kept)
-q15_t adc_val[adc_ch_n];
+volatile q15_t adc_val[adc_ch_n];
 
 
 // Data organization:
@@ -17,7 +17,7 @@ q15_t adc_val[adc_ch_n];
 //
 //  Or, just average each group (for speed)
 
-static q15_t adc_raw[adc_decimation_m*2][adc_ch_n] ALIGN32;
+static volatile q15_t adc_raw[adc_decimation_m*2][adc_ch_n] ALIGN32;
 
 #if ADC_FILTER_ENABLE
 static q15_t adc_raw_tr[adc_ch_n][adc_decimation_m] ALIGN32;

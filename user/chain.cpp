@@ -1,7 +1,7 @@
 #include "chain.hpp"
 
 
-uint16_t chain_buf[chain_buf_n];
+volatile uint16_t chain_buf[chain_buf_n];
 
 static DMA_HandleTypeDef *chain_hdma_tx, *chain_hdma_rx;
 
