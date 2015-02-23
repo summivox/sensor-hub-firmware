@@ -11,7 +11,7 @@
 #define CHAIN_HSPI hspi1
 
 
-extern uint16_t chain_buf[chain_buf_n];
+extern volatile uint16_t chain_buf[chain_buf_n];
 
 void chain_init(void);
 
