@@ -1,5 +1,5 @@
 #MicroXplorer Configuration settings - do not modify
-#Sun Feb 22 17:07:12 EST 2015
+#Sun Feb 22 23:15:23 EST 2015
 ADC1.Channel=ADC_CHANNEL_12
 ADC1.Channel-7\#ChannelRegularConversion=ADC_CHANNEL_10
 ADC1.Channel-8\#ChannelRegularConversion=ADC_CHANNEL_11
@@ -134,7 +134,7 @@ Mcu.UserName=STM32F100R8Tx
 MxCube.Version=4.6.0
 MxDb.Version=DB.4.0.60
 NVIC.DMA1_Channel1_IRQn=true\:2\:0\:true
-NVIC.DMA1_Channel7_IRQn=true\:0\:0\:false
+NVIC.DMA1_Channel7_IRQn=true\:7\:0\:true
 NVIC.EXTI4_IRQn=true\:1\:0\:true
 NVIC.PriorityGroup=NVIC_PRIORITYGROUP_3
 NVIC.SysTick_IRQn=true\:7\:0\:true
