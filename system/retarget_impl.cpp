@@ -57,7 +57,7 @@ static void rx_blocked(void) {
 //  <e> TX (stdout, stderr)
 #   define TX_EN 1
 //      <o> depth of double buffer
-#       define TX_BUF_N 256
+#       define TX_BUF_N 32
 //      <e> auto-flush
 #       define TX_AUTO_FLUSH 1
 //          <o> auto-flush trigger character (e.g. 0x0A '\n') <0x00-0xff>
@@ -70,7 +70,7 @@ static void rx_blocked(void) {
 //  <e> RX (stdin)
 #   define RX_EN 1
 //      <o> buffer depth
-#       define RX_BUF_N 256
+#       define RX_BUF_N 32
 //      <e> echo back *READ* chars
 #       define RX_ECHO 1
 //          <q> echo CR ("\r") as CRLF ("\r\n")
