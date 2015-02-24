@@ -4,7 +4,7 @@
 #include "cic.hpp"
 
 
-#define EACH(ch) for (int ch = 0 ; ch < adc_ch_n ; ++ch)
+#define EACH(ch) for (int ch = adc_ch_n - 1 ; ch >= 0 ; --ch)
 
 
 // Output (only latest is kept)

@@ -24,7 +24,7 @@ struct CIC {
     }
     input_t operator() (input_t* x, int skip = 1) {
         // integrate sections
-        for (int i = 0 ; i < decimation ; ++i) {
+        for (int i = decimation - 1 ; i >= 0 ; --i) {
             for (int r = rank - 1 ; r >= 1 ; --r) {
                 I[r] += I[r-1];
             }
@@ -61,7 +61,7 @@ struct CIC <input_bits, decimation_bits, 2> {
     }
     input_t operator() (input_t* x, int skip = 1) {
         // integrate sections
-        for (int i = 0 ; i < decimation ; ++i) {
+        for (int i = decimation - 1 ; i >= 0 ; --i) {
             I1 += I0;
             I0 += *x;
             x += skip;
@@ -93,7 +93,7 @@ struct CIC <input_bits, decimation_bits, 3> {
     }
     input_t operator() (input_t* x, int skip = 1) {
         // integrate sections
-        for (int i = 0 ; i < decimation ; ++i) {
+        for (int i = decimation - 1 ; i >= 0 ; --i) {
             I2 += I1;
             I1 += I0;
             I0 += *x;
