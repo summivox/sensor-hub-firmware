@@ -57,19 +57,19 @@ __task void main_task() {
     adc_init();
     adc_start();
 
-    DBG1 = 1;
+    DBG_NSS = 1;
     os_dly_wait(1000);
 
     chain_init();
 
     os_itv_set(1);
     while (1) {
-        DBG1 = 0;
+        DBG_NSS = 0;
         HAL_SPI_Receive_DMA(&hspi2, (uint8_t*)&enc_abs_val, 1);
         SHORT_DELAY(1000);
         HAL_SPI_DMAStop(&hspi2);
         SHORT_DELAY(50);
-        DBG1 = 1;
+        DBG_NSS = 1;
         os_itv_wait();
     }
 }

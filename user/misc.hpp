@@ -12,5 +12,8 @@
 
 #define DBG0 PO(A, 0)
 #define DBG1 PO(A, 1)
+#define DBG3 PO(A, 3)
+
+#define DBG_NSS DBG3
 
 #endif//_MISC_HPP_
