@@ -25,6 +25,8 @@ void enc_inc_init();
 // SPI2: absolute encoder interface
 volatile uint16_t enc_abs_val;
 void enc_abs_init();
+void enc_abs_start();
+void enc_abs_stop();
 
 
 // data payload
@@ -65,11 +67,12 @@ __task void main_task() {
     os_itv_set(1);
     while (1) {
         DBG_NSS = 0;
-        HAL_SPI_Receive_DMA(&hspi2, (uint8_t*)&enc_abs_val, 1);
+        enc_abs_start();
         SHORT_DELAY(1000);
-        HAL_SPI_DMAStop(&hspi2);
+        enc_abs_stop();
         SHORT_DELAY(50);
         DBG_NSS = 1;
+        printf("%04X\r\n", adc_val[0]);
         os_itv_wait();
     }
 }
@@ -89,17 +92,22 @@ void enc_abs_init() {
 void enc_abs_start() {
     HAL_SPI_Receive_DMA(&hspi2, (uint8_t*)&enc_abs_val, 1);
 }
+void enc_abs_stop() {
+    HAL_SPI_DMAStop(&hspi2);
+}
 
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
-    //DBG0 = 1;
+    DBG2 = 1;
     if (pin == GPIO_PIN_4) {
-        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4) == 0) {
-            chain_load_data();
-            chain_transfer();
-        } else {
-            chain_stop();
+        if (chain_inited) {
+            if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4) == 0) {
+                chain_load_data();
+                chain_transfer();
+            } else {
+                chain_stop();
+            }
         }
     }
-    //DBG0 = 0;
+    DBG2 = 0;
 }

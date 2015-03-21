@@ -9,8 +9,14 @@
 
 #define CHAIN_SPI SPI1
 #define CHAIN_HSPI hspi1
+#define CHAIN_SPI_RESET do{ \
+    __SPI1_FORCE_RESET(); \
+    __SPI1_RELEASE_RESET(); \
+    __SPI1_CLK_ENABLE(); \
+} while (0)
 
 
+extern bool chain_inited;
 extern volatile uint16_t chain_buf[chain_buf_n];
 
 void chain_init(void);
