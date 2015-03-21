@@ -23,7 +23,7 @@ void chain_init(void);
 
 // On NSS falling edge:
 //  1.  write `chain_buf`
-//  2.  call `chain_transfer`   
+//  2.  call `chain_transfer`
 // On NSS rising edge:
 //  1.  call `chain_stop`
 void chain_transfer(void);

@@ -17,7 +17,7 @@ void chain_init() {
     // shortcut to SPI and DMA
     chain_hdma_tx = CHAIN_HSPI.hdmatx;
     chain_hdma_rx = CHAIN_HSPI.hdmarx;
-    
+
     // save SPI config
     CR1 = CHAIN_SPI->CR1;
 
@@ -28,7 +28,7 @@ void chain_init() {
     __HAL_DMA_DISABLE(chain_hdma_rx);
     CHAIN_SPI->CR2 = (SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
     chain_stop();
-    
+
     chain_inited = true;
 }
 
@@ -50,7 +50,7 @@ void chain_stop() {
     chain_hdma_rx->Instance->CNDTR = chain_buf_n;
     __HAL_DMA_ENABLE(CHAIN_HSPI.hdmatx);
     __HAL_DMA_ENABLE(CHAIN_HSPI.hdmarx);
-    
+
     // reset SPI
     CHAIN_SPI_RESET;
     CHAIN_SPI->CR1 = CR1;
