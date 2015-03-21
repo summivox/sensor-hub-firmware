@@ -98,14 +98,16 @@ void enc_abs_stop() {
 
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
-    //DBG0 = 1;
+    DBG2 = 1;
     if (pin == GPIO_PIN_4) {
-        if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4) == 0) {
-            chain_load_data();
-            chain_transfer();
-        } else {
-            chain_stop();
+        if (chain_inited) {
+            if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4) == 0) {
+                chain_load_data();
+                chain_transfer();
+            } else {
+                chain_stop();
+            }
         }
     }
-    //DBG0 = 0;
+    DBG2 = 0;
 }

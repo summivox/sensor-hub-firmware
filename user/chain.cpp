@@ -1,9 +1,10 @@
 #include "chain.hpp"
 
-
+bool chain_inited = false;
 volatile uint16_t chain_buf[chain_buf_n];
 
-static DMA_HandleTypeDef *chain_hdma_tx, *chain_hdma_rx;
+/*static*/ DMA_HandleTypeDef *chain_hdma_tx, *chain_hdma_rx;
+static uint32_t CR1 = 0;
 
 // Steps of a complete transfer cycle (after interrupt trigger):
 //  1.  Enable SPI DMA request
@@ -16,6 +17,9 @@ void chain_init() {
     // shortcut to SPI and DMA
     chain_hdma_tx = CHAIN_HSPI.hdmatx;
     chain_hdma_rx = CHAIN_HSPI.hdmarx;
+    
+    // save SPI config
+    CR1 = CHAIN_SPI->CR1;
 
     // initialize DMA pointers
     HAL_DMA_Start(chain_hdma_tx, (uint32_t)chain_buf, (uint32_t)&CHAIN_SPI->DR, chain_buf_n);
@@ -24,21 +28,14 @@ void chain_init() {
     __HAL_DMA_DISABLE(chain_hdma_rx);
     CHAIN_SPI->CR2 = (SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
     chain_stop();
+    
+    chain_inited = true;
 }
-
-bool chain_dbg_tx1, chain_dbg_rx1, chain_dbg_tx2, chain_dbg_rx2;
-uint16_t chain_dbg_x;
-#include "misc.hpp"
 
 void chain_transfer() {
     // enable DMA request and start SPI
-    chain_dbg_tx1 = (chain_hdma_tx->Instance->CNDTR == chain_buf_n);
     CHAIN_SPI->CR2 = (SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
     CHAIN_SPI->CR1 |= SPI_CR1_SPE;
-    DBG2 = 1;
-    //while (chain_hdma_tx->Instance->CNDTR != chain_buf_n) ;
-    DBG2 = 0;
-    chain_dbg_x = chain_buf[0];
 }
 
 void chain_stop() {
@@ -53,4 +50,8 @@ void chain_stop() {
     chain_hdma_rx->Instance->CNDTR = chain_buf_n;
     __HAL_DMA_ENABLE(CHAIN_HSPI.hdmatx);
     __HAL_DMA_ENABLE(CHAIN_HSPI.hdmarx);
+    
+    // reset SPI
+    CHAIN_SPI_RESET;
+    CHAIN_SPI->CR1 = CR1;
 }
