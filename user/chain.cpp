@@ -22,14 +22,23 @@ void chain_init() {
     HAL_DMA_Start(chain_hdma_rx, (uint32_t)&CHAIN_SPI->DR, (uint32_t)chain_buf, chain_buf_n);
     __HAL_DMA_DISABLE(chain_hdma_tx);
     __HAL_DMA_DISABLE(chain_hdma_rx);
-    CHAIN_SPI->CR2 |= (SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
+    CHAIN_SPI->CR2 = (SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
     chain_stop();
 }
 
+bool chain_dbg_tx1, chain_dbg_rx1, chain_dbg_tx2, chain_dbg_rx2;
+uint16_t chain_dbg_x;
+#include "misc.hpp"
+
 void chain_transfer() {
     // enable DMA request and start SPI
+    chain_dbg_tx1 = (chain_hdma_tx->Instance->CNDTR == chain_buf_n);
     CHAIN_SPI->CR2 = (SPI_CR2_TXDMAEN | SPI_CR2_RXDMAEN);
     CHAIN_SPI->CR1 |= SPI_CR1_SPE;
+    DBG2 = 1;
+    //while (chain_hdma_tx->Instance->CNDTR != chain_buf_n) ;
+    DBG2 = 0;
+    chain_dbg_x = chain_buf[0];
 }
 
 void chain_stop() {
