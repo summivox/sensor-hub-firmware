@@ -66,12 +66,14 @@ __task void main_task() {
 
     os_itv_set(1);
     while (1) {
+#if DUMMY_SPI_MASTER
         DBG_NSS = 0;
         enc_abs_start();
         SHORT_DELAY(1000);
         enc_abs_stop();
         SHORT_DELAY(50);
         DBG_NSS = 1;
+#endif
         printf("%04X\r\n", adc_val[0]);
         os_itv_wait();
     }
