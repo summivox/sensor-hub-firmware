@@ -39,7 +39,6 @@ void chain_load_data() {
     chain_buf[4] = TIM4->CNT;
     chain_buf[5] = adc_val[0];
     chain_buf[6] = adc_val[1];
-    chain_buf[7] = adc_val[2];
 #else
     static const uint16_t dummy[chain_buf_n] = CHAIN_DUMMY_DATA;
     memcpy((void*)chain_buf, dummy, chain_buf_n*sizeof(*dummy));

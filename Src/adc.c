@@ -59,7 +59,7 @@ void MX_ADC1_Init(void)
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 3;
+  hadc1.Init.NbrOfConversion = 2;
   HAL_ADC_Init(&hadc1);
 
     /**Configure Regular Channel 
@@ -67,12 +67,6 @@ void MX_ADC1_Init(void)
   sConfig.Channel = ADC_CHANNEL_11;
   sConfig.Rank = 2;
   sConfig.SamplingTime = ADC_SAMPLETIME_7CYCLES_5;
-  HAL_ADC_ConfigChannel(&hadc1, &sConfig);
-
-    /**Configure Regular Channel 
-    */
-  sConfig.Channel = ADC_CHANNEL_12;
-  sConfig.Rank = 3;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
     /**Configure Regular Channel 
