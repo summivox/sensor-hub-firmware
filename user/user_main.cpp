@@ -45,9 +45,17 @@ void chain_load_data() {
 #endif
 }
 
+static void reset_jtag() {
+    // Properly release all JTAG pins
+    // See last post in <https://my.st.com/public/STe2ecommunities/mcu/Lists/cortex_mx_stm32/STM32%20F103xx%20using%20PB3>
+    __HAL_AFIO_REMAP_SWJ_DISABLE();
+    __HAL_AFIO_REMAP_SWJ_NOJTAG();
+    DBGMCU->CR &=~ DBGMCU_CR_TRACE_IOEN;
+}
 
 void user_main() {
     retarget_init();
+    reset_jtag();
     os_sys_init_prio(main_task, 0x80);
 }
 __task void main_task() {
