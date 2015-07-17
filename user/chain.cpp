@@ -22,8 +22,8 @@ void chain_init() {
     CR1 = CHAIN_SPI->CR1;
 
     // initialize DMA pointers
-    HAL_DMA_Start(chain_hdma_tx, (uint32_t)chain_buf, (uint32_t)&CHAIN_SPI->DR, chain_buf_n);
-    HAL_DMA_Start(chain_hdma_rx, (uint32_t)&CHAIN_SPI->DR, (uint32_t)chain_buf, chain_buf_n);
+    HAL_DMA_Start(chain_hdma_tx, (uint32_t)chain_buf, (uint32_t)&CHAIN_SPI->DR, chain_buf_n*2);
+    HAL_DMA_Start(chain_hdma_rx, (uint32_t)&CHAIN_SPI->DR, (uint32_t)chain_buf, chain_buf_n*2);
     chain_stop();
 
     chain_inited = true;
@@ -43,8 +43,8 @@ void chain_stop() {
     // reset DMA
     __HAL_DMA_DISABLE(chain_hdma_tx);
     __HAL_DMA_DISABLE(chain_hdma_rx);
-    chain_hdma_tx->Instance->CNDTR = chain_buf_n;
-    chain_hdma_rx->Instance->CNDTR = chain_buf_n;
+    chain_hdma_tx->Instance->CNDTR = chain_buf_n*2;
+    chain_hdma_rx->Instance->CNDTR = chain_buf_n*2;
     __HAL_DMA_ENABLE(chain_hdma_tx);
     __HAL_DMA_ENABLE(chain_hdma_rx);
 

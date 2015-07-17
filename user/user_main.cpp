@@ -55,7 +55,7 @@ static void reset_jtag() {
 
 void user_main() {
     retarget_init();
-    reset_jtag();
+    //reset_jtag();
     os_sys_init_prio(main_task, 0x80);
 }
 __task void main_task() {
@@ -63,6 +63,7 @@ __task void main_task() {
 
     enc_inc_init();
     enc_abs_init();
+    enc_abs_start();
     adc_init();
     adc_start();
 
@@ -73,14 +74,6 @@ __task void main_task() {
 
     os_itv_set(1);
     while (1) {
-#if DUMMY_SPI_MASTER
-        DBG_NSS = 0;
-        enc_abs_start();
-        SHORT_DELAY(1000);
-        enc_abs_stop();
-        SHORT_DELAY(50);
-        DBG_NSS = 1;
-#endif
         printf("%04X\r\n", adc_val[0]);
         os_itv_wait();
     }
