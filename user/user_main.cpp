@@ -55,7 +55,7 @@ static void reset_jtag() {
 
 void user_main() {
     retarget_init();
-    //reset_jtag();
+    reset_jtag();
     os_sys_init_prio(main_task, 0x80);
 }
 __task void main_task() {
