@@ -1,7 +1,6 @@
 /**
   ******************************************************************************
   * File Name          : main.c
-  * Date               : 21/02/2015 21:47:09
   * Description        : Main program body
   ******************************************************************************
   *
@@ -31,7 +30,6 @@
   *
   ******************************************************************************
   */
-
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f1xx_hal.h"
 #include "adc.h"
@@ -48,6 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+/* Private variables ---------------------------------------------------------*/
 
 /* USER CODE END PV */
 
@@ -55,6 +54,7 @@
 void SystemClock_Config(void);
 
 /* USER CODE BEGIN PFP */
+/* Private function prototypes -----------------------------------------------*/
 
 /* USER CODE END PFP */
 
@@ -66,7 +66,7 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-  void user_main(void);
+
   /* USER CODE END 1 */
 
   /* MCU Configuration----------------------------------------------------------*/
@@ -87,18 +87,19 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_TIM4_Init();
-  MX_USART2_UART_Init();
+  MX_USART3_UART_Init();
 
   /* USER CODE BEGIN 2 */
 
-  user_main();
-
   /* USER CODE END 2 */
 
-  /* USER CODE BEGIN 3 */
   /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
+  /* USER CODE END WHILE */
+
+  /* USER CODE BEGIN 3 */
 
   }
   /* USER CODE END 3 */
@@ -133,7 +134,9 @@ void SystemClock_Config(void)
   PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV2;
   HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit);
 
-  __HAL_RCC_AFIO_CLK_ENABLE();
+  HAL_SYSTICK_Config(HAL_RCC_GetHCLKFreq()/1000);
+
+  HAL_SYSTICK_CLKSourceConfig(SYSTICK_CLKSOURCE_HCLK);
 
 }
 
