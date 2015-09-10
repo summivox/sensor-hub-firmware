@@ -52,10 +52,10 @@ static void rx_blocked(void) {
 //      <1=> USART1
 //      <2=> USART2
 //      <3=> USART3
-#   define USART_N 2
+#   define USART_N 3
 
 //  <e> TX (stdout, stderr)
-#   define TX_EN 1
+#   define TX_EN 0
 //      <o> depth of double buffer
 #       define TX_BUF_N 32
 //      <e> auto-flush
@@ -68,7 +68,7 @@ static void rx_blocked(void) {
 //  </e>
 
 //  <e> RX (stdin)
-#   define RX_EN 1
+#   define RX_EN 0
 //      <o> buffer depth
 #       define RX_BUF_N 32
 //      <e> echo back *READ* chars
@@ -114,14 +114,14 @@ extern "C" {
 ////////////
 // buffers
 
-#ifdef TX_EN
+#if TX_EN
 // TX double buffer
 static byte tx_buf[2][TX_BUF_N];
 static byte *tx_p, *tx_p_curr, *tx_p_end; //write buffer
 static byte *tx_p_next; //transfer buffer
 #endif//TX_EN
 
-#ifdef RX_EN
+#if RX_EN
 // RX ring buffer
 static byte rx_buf[RX_BUF_N];
 static uint32_t rx_head = 0; //index of element to be read
@@ -133,7 +133,7 @@ static uint32_t rx_bs_n; //number of "un-read" characters in buffer
 // initialization
 
 void retarget_impl_init(void) {
-#ifdef TX_EN
+#if TX_EN
     // TX double buffer
     tx_p_curr = tx_p = tx_buf[0];
     tx_p_end = tx_p_curr + TX_BUF_N;
@@ -150,7 +150,7 @@ void retarget_impl_init(void) {
     HAL_DMA_Init(U.hdmatx);
 #endif//TX_EN
 
-#ifdef RX_EN
+#if RX_EN
     // RX ring buffer
     rx_head = 0;
 
@@ -184,6 +184,7 @@ void fputc_impl_nobuf(int ch) {
 
 // buffered (stdout)
 void fputc_impl_buf(int ch) {
+#if TX_EN
     if (TX_AUTO_FLUSH && ch == TX_AUTO_FLUSH_CHAR) {
         if (TX_AUTO_FLUSH_NOCONSUME) *tx_p++ = ch;
         fflush_impl();
@@ -191,9 +192,13 @@ void fputc_impl_buf(int ch) {
         *tx_p++ = ch;
         if (tx_p == tx_p_end) fflush_impl();
     }
+#else//TX_EN
+    fputc_impl_nobuf(ch);
+#endif//TX_EN
 }
 
 void fflush_impl() {
+#if TX_EN
     // wait for existing transfer to finish
     while (!(U.Instance->SR & USART_SR_TC)) tx_blocked();
 
@@ -209,6 +214,7 @@ void fflush_impl() {
     tx_p_next = p;
     tx_p = tx_p_curr;
     tx_p_end = tx_p_curr + TX_BUF_N;
+#endif//TX_EN
 }
 
 
@@ -225,6 +231,7 @@ static void echo(byte ch) {
 }
 
 int fgetc_impl() {
+#if RX_EN
     // check DMA internal counter to see if ring buffer is empty
     while (rx_head == (RX_BUF_N - U.hdmarx->Instance->CNDTR))
         rx_blocked();
@@ -232,11 +239,19 @@ int fgetc_impl() {
     // read from ring buffer
     byte ch = rx_buf[rx_head];
     Q_INC(rx_head, RX_BUF_N);
+#else//RX_EN
+    byte ch = 0;
+    while (HAL_UART_Receive(&U, &ch, 1, HAL_MAX_DELAY) != HAL_OK)
+        rx_blocked();
+#endif//RX_EN
 
     // echo and backspace handling: one char is echoed only when it's first read
+#if RX_EN
     if (rx_bs_n > 0) {
         --rx_bs_n;
-    } else if (RX_ECHO) {
+    } else
+#endif//RX_EN
+    if (RX_ECHO) {
         echo(ch);
     }
     
@@ -244,8 +259,10 @@ int fgetc_impl() {
 }
 
 void backspace_impl() {
+#if RX_EN
     // backtrack ring buffer
     // We can do this because overflow behavior is undefined anyway
     Q_DEC(rx_head, RX_BUF_N);
     ++rx_bs_n;
+#endif//RX_EN
 }

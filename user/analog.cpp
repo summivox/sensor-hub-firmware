@@ -23,12 +23,10 @@ CIC<12, adc_decimation_bits, adc_decimation_rank> cic[adc_ch_n];
 
 void adc_init() {
     HAL_ADCEx_Calibration_Start(&hadc1);
-    DBG0 = 1;
 }
 
 void adc_start() {
     HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_raw, adc_ch_n*adc_decimation*2);
-    DBG0 = 0;
 }
 
 static void average(q15_t* p) {
@@ -37,13 +35,9 @@ static void average(q15_t* p) {
 
 extern "C" void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef* hadc) {
     // first half of the double buffer is ready
-    DBG0 = 1;
     average(adc_raw_0);
-    DBG0 = 0;
 }
 extern "C" void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) {
     // second half of the double buffer is ready
-    DBG0 = 1;
     average(adc_raw_1);
-    DBG0 = 0;
 }
