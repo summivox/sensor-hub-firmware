@@ -14,7 +14,6 @@
 #include "chain.hpp"
 #include "analog.hpp"
 
-extern "C" void user_main(void);
 extern "C" void retarget_init(void);
 __task void main_task();
 
@@ -53,24 +52,27 @@ static void reset_jtag() {
     DBGMCU->CR &=~ DBGMCU_CR_TRACE_IOEN;
 }
 
-void user_main() {
+extern "C" void $Super$$main(void);
+extern "C" void $Sub$$main() {
+    $Super$$main();
     retarget_init();
-    reset_jtag();
+    //reset_jtag();
     os_sys_init_prio(main_task, 0x80);
 }
 __task void main_task() {
-    puts("\r\n\r\n=== RNL2 sensor hub ===\r\n\r\n");
+    puts(
+        "\r\n\r\n"
+        "### RNL3 sensor hub \r\n"
+        "### Build: " __DATE__ " " __TIME__ "\r\n"
+        "\r\n"
+    );
 
-    enc_inc_init();
-    enc_abs_init();
-    enc_abs_start();
-    adc_init();
-    adc_start();
-
-    DBG_NSS = 1;
-    os_dly_wait(1000);
-
-    chain_init();
+    //enc_inc_init();
+    //enc_abs_init();
+    //enc_abs_start();
+    //adc_init();
+    //adc_start();
+    //chain_init();
 
     os_itv_set(1);
     while (1) {
@@ -100,7 +102,6 @@ void enc_abs_stop() {
 
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
-    DBG2 = 1;
     if (pin == GPIO_PIN_4) {
         if (chain_inited) {
             if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4) == 0) {
@@ -111,5 +112,4 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
             }
         }
     }
-    DBG2 = 0;
 }
