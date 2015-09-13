@@ -59,7 +59,11 @@ extern "C" void $Sub$$main() {
     //reset_jtag();
     os_sys_init_prio(main_task, 0x80);
 }
+
+static OS_TID main_tid = 0;
 __task void main_task() {
+    main_tid = os_tsk_self();
+    
     puts(
         "\r\n\r\n"
         "### RNL3 sensor hub \r\n"
@@ -104,6 +108,11 @@ void enc_abs_stop() {
     HAL_SPI_DMAStop(&hspi2);
 }
 
+
+extern "C" uint32_t HAL_GetTick(void) {
+    if (main_tid) return os_time_get();
+    else return 0;
+}
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
     if (pin == GPIO_PIN_4) {
