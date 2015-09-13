@@ -67,16 +67,18 @@ __task void main_task() {
         "\r\n"
     );
 
-    //enc_inc_init();
-    //enc_abs_init();
-    //enc_abs_start();
-    //adc_init();
-    //adc_start();
-    //chain_init();
+    enc_inc_init();
+    enc_abs_init();
+    enc_abs_start();
+    adc_init();
+    adc_start();
+    chain_init();
 
-    os_itv_set(1);
+    os_itv_set(100);
     while (1) {
-        printf("%04X\r\n", adc_val[0]);
+        static int n = 0;
+        if (++n == 100) n = 0;
+        printf("%02d: %04X\r\n", n, adc_val[0]);
         os_itv_wait();
     }
 }
@@ -94,6 +96,8 @@ void enc_abs_init() {
     SPI2->CR1 |= SPI_CR1_SPE;
 }
 void enc_abs_start() {
+    HAL_NVIC_DisableIRQ(DMA1_Channel4_IRQn);
+    HAL_NVIC_DisableIRQ(DMA1_Channel5_IRQn);
     HAL_SPI_Receive_DMA(&hspi2, (uint8_t*)&enc_abs_val, 1);
 }
 void enc_abs_stop() {
@@ -103,6 +107,7 @@ void enc_abs_stop() {
 
 extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
     if (pin == GPIO_PIN_4) {
+        // chain trigger interrupt handler
         if (chain_inited) {
             if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4) == 0) {
                 chain_load_data();
@@ -113,3 +118,4 @@ extern "C" void HAL_GPIO_EXTI_Callback(uint16_t pin) {
         }
     }
 }
+
